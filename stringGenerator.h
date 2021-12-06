@@ -38,16 +38,16 @@ class stringGenerator{
             jumpIdx2.push_back(stoi(line));
         }
 
-        cout << "string 1 is: " << str1 << "*" <<endl;
-        for(int a : jumpIdx1){
-            cout << a << " ";
-        }
-        cout << endl;
-        cout << "string 2 is: " << str2 << "*" <<endl;
-        for(int a : jumpIdx2){
-            cout << a << " ";
-        }
-        cout << endl;
+        // cout << "string 1 is: " << str1 << "*" <<endl;
+        // for(int a : jumpIdx1){
+        //     cout << a << " ";
+        // }
+        // cout << endl;
+        // cout << "string 2 is: " << str2 << "*" <<endl;
+        // for(int a : jumpIdx2){
+        //     cout << a << " ";
+        // }
+        // cout << endl;
 
         for(int a : jumpIdx1){
             string tmp = str1;
