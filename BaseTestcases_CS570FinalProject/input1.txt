@@ -1,4 +1,7 @@
-AC
+ACTG
+3
+6
+1
 1
 TACG
 1
