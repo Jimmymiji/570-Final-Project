@@ -1,11 +1,14 @@
-#include <stdio.h>
 
+#include <stdio.h>
+#include <unistd.h>
+#include <ios>
 #include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <ctime>
 
 #include "stringGenerator.h"
 
@@ -17,80 +20,6 @@ const unordered_map<char, unordered_map<char, int>> costTable = {
     {'G', {{'A', 48}, {'C', 118}, {'G', 0}, {'T', 110}}},
     {'T', {{'A', 94}, {'C', 48}, {'G', 110}, {'T', 0}}}};
 const int gapPenalty = 30;
-
-int basicAlignment(const string& str1, const string& str2, string& newStr1,
-                   string& newStr2) {
-  int m = str1.size();
-  int n = str2.size();
-  vector<vector<int>> DP = vector<vector<int>>(m + 1, vector<int>(n + 1, 0));
-  for (int i = 1; i <= m; i++) {
-    DP[i][0] = i * gapPenalty;
-  }
-  for (int i = 1; i <= n; i++) {
-    DP[0][i] = i * gapPenalty;
-  }
-
-  for (int i = 1; i <= m; i++) {
-    for (int j = 1; j <= n; j++) {
-      int tmp1 = costTable.at(str1[i - 1]).at(str2[j - 1]) + DP[i - 1][j - 1];
-      int tmp2 = gapPenalty + DP[i - 1][j];
-      int tmp3 = gapPenalty + DP[i][j - 1];
-      if (tmp1 <= tmp2 && tmp1 <= tmp3) {
-        DP[i][j] = tmp1;
-        continue;
-      }
-      if (tmp2 <= tmp1 && tmp2 <= tmp3) {
-        DP[i][j] = tmp2;
-        continue;
-      }
-      if (tmp3 <= tmp1 && tmp3 <= tmp2) {
-        DP[i][j] = tmp3;
-        continue;
-      }
-    }
-  }
-
-  int l = m + n;
-  newStr1.resize(l);
-  newStr2.resize(l);
-  int idx1 = l - 1;
-  int idx2 = l - 1;
-  int i = m;
-  int j = n;
-  while (i != 0 && j != 0) {
-    if (DP[i - 1][j - 1] + costTable.at(str1[i - 1]).at(str2[j - 1]) ==
-        DP[i][j]) {
-      newStr1[idx1--] = str1[i - 1];
-      newStr2[idx2--] = str2[j - 1];
-      i--;
-      j--;
-    } else if (DP[i][j - 1] + gapPenalty == DP[i][j]) {
-      newStr1[idx1--] = '_';
-      newStr2[idx2--] = str2[j - 1];
-      j--;
-    } else {
-      newStr1[idx1--] = str1[i - 1];
-      newStr2[idx2--] = '_';
-      i--;
-    }
-  }
-  while (idx1) {
-    newStr1[idx1--] = (i > 0) ? str1[i - 1] : '_';
-    i--;
-  }
-  while (idx2) {
-    newStr2[idx2--] = (j > 0) ? str2[j - 1] : '_';
-    j--;
-  }
-  int start = 1;
-  while (newStr1[start] == '_' && newStr2[start] == '_') {
-    start++;
-  }
-  newStr1 = newStr1.substr(start);
-  newStr2 = newStr2.substr(start);
-
-  return DP[m][n];
-}
 
 vector<int> sapceEfficientAlignment(const string& str1, const string& str2) {
   int m = str1.size();
@@ -226,7 +155,7 @@ int devideAndConquerAlignment(const string& str1, const string& str2,
     newStr1 = newStr1 + m[0];
     newStr2 = newStr2 + m[1];
   }
-
+  
   return cost;
 }
 
@@ -244,13 +173,14 @@ int checkAlignment(const string& str1, const string& str2) {
   return ans;
 }
 
-int main(int argc, char* argv[]) {
-  if (argc != 3) {
-    cout << "Please secify algorithm type (Basic / D&C) and input file" << endl;
+
+int main(int argc, char** argv){
+     if (argc != 2) {
+    cout << "Please secify input file" << endl;
     return -1;
   }
-  string filename = argv[2];
-  string type = argv[1];
+
+  string filename = argv[1];
 
   stringGenerator sg(filename);
 
@@ -258,45 +188,30 @@ int main(int argc, char* argv[]) {
   string str2 = sg.getSecondString();
   string new1, new2;
 
-  if (type == "Basic") {
-    int ans1 = basicAlignment(str1, str2, new1, new2);
-    cout << "Ans1: " << ans1 << endl;
-    cout << "new1: " << new1 << endl;
-    cout << "new2: " << new2 << endl;
-    cout << "checkAlignment(new1, new2): " << checkAlignment(new1, new2)
-         << endl;
-  } else if (type == "D&C") {
-    int ans1 = devideAndConquerAlignment(str1, str2, new1, new2);
-    cout << "Ans1: " << ans1 << endl;
-    cout << "new1: " << new1 << endl;
-    cout << "new2: " << new2 << endl;
-    cout << "checkAlignment(new1, new2): " << checkAlignment(new1, new2)
-         << endl;
-  } else {
-    cout << "Unkown algorithm type" << endl;
-  }
+  double time_elapsed_ms = 0;
+  int ans = 0;
+  
+  
+//   clock_t c_start = std::clock();
+  ans = devideAndConquerAlignment(str1, str2, new1, new2);
+//   clock_t c_end = std::clock();
+//   time_elapsed_ms = 1000.0 * (c_end-c_start) / CLOCKS_PER_SEC;
+//   cout << "Cost: " << ans << endl;
+//   cout << "new1: " << new1 << endl;
+//   cout << "new2: " << new2 << endl;
+//   cout << "checkAlignment(new1, new2): " << checkAlignment(new1, new2)
+//         << endl;
+//   std::cout << "CPU time used: " << time_elapsed_ms << " ms\n";
+
+  // Write to file
+  ofstream myfile;
+//   string outFileName = filename.substr(0, filename.size() - 4) + "_output.txt";
+  myfile.open ("data/output_efficient.txt");
+  myfile << new1.substr(0, 50) << " " << new1.substr(new1.size() - 51, 50) << "\n";
+  myfile << new2.substr(0, 50) << " " << new1.substr(new2.size() - 51, 50) << "\n";
+  myfile << ans * 1.0 << "\n";
+//   myfile << time_elapsed_ms / 1000.0 << "\n";
+  myfile.close();
 
   return 0;
-  // stringGenerator sg1("BaseTestcases_CS570FinalProject/input1.txt");
-  // stringGenerator sg2("BaseTestcases_CS570FinalProject/input2.txt");
-
-  // string new1, new2, newa, newb;
-  // string a,b,c,d;
-
-  // string str1 = sg1.getFirstString();
-  // string str2 = sg1.getSecondString();
-  // int ans1 = devideAndConquerAlignment(str1, str2, new1, new2);
-  // cout << "Ans1: " << ans1 << " " << basicAlignment(str1, str2, a, b) <<
-  // endl; cout << "new1: " << new1 << endl; cout << "new2: " << new2 << endl;
-  // cout << "checkAlignment(new1, new2): " << checkAlignment(new1, new2) <<
-  // endl;
-
-  // string stra = sg2.getFirstString();
-  // string strb = sg2.getSecondString();
-  // int ans2 = devideAndConquerAlignment(stra, strb, newa, newb);
-  // cout << "Ans2: " << ans2 << " " << basicAlignment(stra, strb, c, d) <<endl;
-  // cout << "newa: " << newa << endl;
-  // cout << "newb: " << newb << endl;
-  // cout << "checkAlignment(newa, newb): " << checkAlignment(newa, newb) <<
-  // endl;
 }
