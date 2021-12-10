@@ -9,7 +9,7 @@ using namespace std;
 class stringGenerator{
     private:
     string str1, str2;
-    vector<int> jumpIdx1, jumpIdx2;
+    vector<int> jumpIdx1 = {}, jumpIdx2 = {};
     
     public:
     stringGenerator(string filename){

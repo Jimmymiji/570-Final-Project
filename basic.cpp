@@ -142,8 +142,16 @@ int main(int argc, char* argv[]) {
   ofstream myfile;
   // string outFileName = filename.substr(0, filename.size() - 4) + "_output.txt";
   myfile.open ("data/output_basic.txt");
-  myfile << new1.substr(0, 50) << " " << new1.substr(new1.size() - 51, 50) << "\n";
-  myfile << new2.substr(0, 50) << " " << new1.substr(new2.size() - 51, 50) << "\n";
+  if(new1.size() <= 50){
+    myfile << new1 << " " << new1 << "\n";
+  } else {
+    myfile << new1.substr(0, 50) << " " << new1.substr(new1.size() - 50, 50) << "\n";
+  }
+  if(new2.size() <= 50){
+    myfile << new2 << " " << new2 << "\n";
+  } else {
+    myfile << new2.substr(0, 50) << " " << new2.substr(new2.size() - 50, 50) << "\n";
+  }
   myfile << ans * 1.0 << "\n";
   // myfile << time_elapsed_ms / 1000.0 << "\n";
   myfile.close();

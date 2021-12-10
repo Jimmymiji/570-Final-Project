@@ -1,0 +1,12 @@
+Contribution:
+Chenbo Lu: Code for efficient aligment, Test, Write Summary
+Shihao Yu: Code for basic aligment, Test, Design test case, Make plot
+
+Observation and Insight:
+From the plot we can see that the time and memory costs are very similiar for small problem. 
+It is reasonable because the majority of time and memory cost are caused by the system operations, 
+when problem is small both methods do not cost much compared to the system operations.
+As the problem goes large, it is obvious that the basic method costs more memory but less time and the efficient method costs
+more time and less space. Because in theory, the basic method cost O(mn) space and the efficient method cost O(m+n) space,
+when problem gets larger, the difference in memory comsumption is larger. And when the program runs, basic method runs in an iterative way while
+the efficient method makes a lot of recursion calls. So that the time consumption is larger for the efficient method.
