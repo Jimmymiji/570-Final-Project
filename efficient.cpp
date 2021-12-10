@@ -206,7 +206,7 @@ int main(int argc, char** argv){
   // Write to file
   ofstream myfile;
 //   string outFileName = filename.substr(0, filename.size() - 4) + "_output.txt";
-  myfile.open ("data/output_efficient.txt");
+  myfile.open ("output.txt");
   if(new1.size() <= 50){
     myfile << new1 << " " << new1 << "\n";
   } else {
